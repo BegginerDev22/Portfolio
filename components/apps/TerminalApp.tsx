@@ -110,7 +110,7 @@ export const TerminalApp: React.FC = () => {
         ))}
         {isLoading && (
            <div className="text-green-500 animate-pulse text-xs pl-2">
-             <span className="mr-2">></span>PROCESSING INTEL...
+             <span className="mr-2"></span>PROCESSING INTEL...
            </div>
         )}
         <div ref={bottomRef} />
