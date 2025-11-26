@@ -117,7 +117,7 @@ export const TerminalApp: React.FC = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="p-2 border-t border-green-800 bg-black flex gap-2">
-        <span className="text-green-500 py-2">></span>
+        <span className="text-green-500 py-2"></span>
         <input
           type="text"
           value={input}
