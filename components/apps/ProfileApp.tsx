@@ -42,7 +42,7 @@ export const ProfileApp: React.FC = () => {
 
           <div className="bg-green-900/10 p-4 border border-green-900 text-sm leading-relaxed">
             <p className="mb-2">
-              <span className="font-bold text-green-500">> BIO_SUMMARY:</span>
+              <span className="font-bold text-green-500"> BIO_SUMMARY:</span>
             </p>
             <p className="opacity-80">
               Motivated software engineer skilled in Java, C, and Python. Comfortable with both front-end (React, Angular) and back-end development. Strong problem-solving skills with a focus on writing clean, efficient code and creating reliable software solutions.
