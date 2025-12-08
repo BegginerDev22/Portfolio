@@ -1,3 +1,3 @@
 :) ❤ :)
 
-portfolio22-livid.vercel.app
+https://portfolio22-livid.vercel.app
