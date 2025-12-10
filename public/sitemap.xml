@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Replace https://example.com with your actual site root -->
+
+  <!-- Homepage -->
   <url>
-    <loc>https://example.com/</loc>
+    <loc>https://portfolio22-livid.vercel.app/</loc>
     <lastmod>2025-12-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- Primary HTML entry (index) -->
+  <!-- Main HTML file -->
   <url>
-    <loc>https://example.com/index.html</loc>
+    <loc>https://portfolio22-livid.vercel.app/index.html</loc>
     <lastmod>2025-12-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Public verification/auxiliary files discovered in repository -->
+  <!-- Google verification file -->
   <url>
-    <loc>https://example.com/google97d0c6bb2666fcd4.html</loc>
+    <loc>https://portfolio22-livid.vercel.app/google97d0c6bb2666fcd4.html</loc>
     <lastmod>2025-12-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.1</priority>
   </url>
 
-  <!-- Robots file (optional to list) -->
+  <!-- robots.txt -->
   <url>
-    <loc>https://example.com/robots.txt</loc>
+    <loc>https://portfolio22-livid.vercel.app/robots.txt</loc>
     <lastmod>2025-12-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.1</priority>
   </url>
 
-  <!-- SPA note: all client routes are handled by the single-page app (index.html).
-       If you have explicit server-routable pages or additional public files, add them here. -->
 </urlset>
