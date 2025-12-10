@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- Homepage -->
   <url>
     <loc>https://portfolio22-livid.vercel.app/</loc>
     <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
   </url>
 
+  <!-- Projects section (same page, anchor link) -->
   <url>
-    <loc>https://portfolio22-livid.vercel.app/projects</loc>
+    <loc>https://portfolio22-livid.vercel.app/#projects</loc>
     <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
   </url>
 
+  <!-- Contact section -->
   <url>
-    <loc>https://portfolio22-livid.vercel.app/contact</loc>
-    <priority>0.8</priority>
+    <loc>https://portfolio22-livid.vercel.app/#contact</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- About section -->
+  <url>
+    <loc>https://portfolio22-livid.vercel.app/#about</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
   </url>
 
 </urlset>
