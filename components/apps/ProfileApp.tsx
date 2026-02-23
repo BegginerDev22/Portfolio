@@ -30,13 +30,13 @@ export const ProfileApp: React.FC = () => {
               <MapPin size={14} />
               <span>Surat, Gujarat, India</span>
             </div>
-            <div className="flex items-center gap-3">
+            {/* <div className="flex items-center gap-3">
               <Hash size={14} />
               <span>+91 78620 55445</span>
-            </div>
+            </div> */}
             <div className="flex items-center gap-3">
               <Globe size={14} />
-              <span>sarthakmayani2004@gmail.com</span>
+              <span>sarthakmayani22@gmail.com</span>
             </div>
           </div>
 
