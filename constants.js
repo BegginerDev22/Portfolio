@@ -1,36 +1,7 @@
 import { User, FolderGit2, Cpu, Terminal, FileLock2, Radio } from 'lucide-react';
 
-/**
- * @typedef {'profile' | 'projects' | 'skills' | 'terminal' | 'resume' | 'contact'} AppId
- *
- * @typedef {Object} AppConfig
- * @property {AppId} id
- * @property {string} title
- * @property {import('lucide-react').LucideIcon} icon
- * @property {number} defaultWidth
- * @property {number} defaultHeight
- * @property {number} defaultX
- * @property {number} defaultY
- *
- * @typedef {Object} Project
- * @property {string} id
- * @property {string} codename
- * @property {string} client
- * @property {string} description
- * @property {string[]} tech
- * @property {'CLASSIFIED' | 'DECRYPTED'} status
- * @property {string=} url
- *
- * @typedef {Object} Skill
- * @property {string} name
- * @property {number} level
- *
- * @typedef {Object} SkillCategory
- * @property {string} name
- * @property {Skill[]} skills
- */
 
-/** @type {AppConfig[]} */
+
 export const APPS = [
   {
     id: 'profile',
@@ -177,7 +148,6 @@ export const PROJECTS: Project[] = [
   }
 ];
 
-/** @type {SkillCategory[]} */
 export const SKILLS = [
   {
     name: 'WEB_TECHNOLOGIES',
