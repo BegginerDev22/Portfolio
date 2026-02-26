@@ -100,7 +100,7 @@ export const STATUS_COLORS = {
   }
 };
 
-export const PROJECTS: Project[] = [
+export const PROJECTS = [
   {
     id: 'p_car',
     codename: 'OP_CAR_WALA',

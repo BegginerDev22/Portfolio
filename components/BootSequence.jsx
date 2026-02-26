@@ -12,11 +12,11 @@ const LOGS = [
   'Access Granted.',
 ];
 
-export const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
+export const BootSequence = ({ onComplete }) => {
   const prefersReducedMotion = useReducedMotion();
   const [lineIndex, setLineIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
-  const [visibleLines, setVisibleLines] = useState<string[]>([]);
+  const [visibleLines, setVisibleLines] = useState([]);
 
   const timestamp = useMemo(() => new Date().toLocaleTimeString(), []);
 

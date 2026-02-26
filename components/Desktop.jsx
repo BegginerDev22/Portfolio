@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { APPS, UI_TOKENS, STATUS_COLORS } from '../constants';
-import { WindowState, AppId } from '../types';
 import { Window } from './Window';
 import { ProjectsApp } from './apps/ProjectsApp';
 import { ProfileApp } from './apps/ProfileApp';
@@ -11,14 +10,14 @@ import { ContactApp } from './apps/ContactApp';
 import { SystemMonitor } from './SystemMonitor';
 import { AnimatePresence, motion, useReducedMotion } from 'https://esm.sh/framer-motion@11.11.17';
 
-export const Desktop: React.FC = () => {
+export const Desktop = () => {
   const prefersReducedMotion = useReducedMotion();
   const [isCompactLayout, setIsCompactLayout] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth < 1024 : false
   );
-  const [windows, setWindows] = useState<Record<string, WindowState>>(() => {
+  const [windows, setWindows] = useState(() => {
     const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
-    const initial: Record<string, WindowState> = {};
+    const initial = {};
 
     APPS.forEach(app => {
       initial[app.id] = {
@@ -134,7 +133,7 @@ export const Desktop: React.FC = () => {
     setActiveId(null);
   };
 
-  const handleMouseDown = (e: React.MouseEvent, id: string, type: 'move' | 'resize') => {
+  const handleMouseDown = (e, id, type) => {
     e.preventDefault();
     bringToFront(id);
     const win = windows[id];
@@ -201,7 +200,7 @@ export const Desktop: React.FC = () => {
 
   const iconVariants = {
     hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 18, scale: prefersReducedMotion ? 1 : 0.98 },
-    visible: (index: number) => ({
+    visible: (index) => ({
       opacity: 1,
       y: 0,
       scale: 1,

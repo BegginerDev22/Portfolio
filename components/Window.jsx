@@ -1,22 +1,9 @@
 import React from 'react';
 import { X, Minus, Square } from 'lucide-react';
-import { WindowState, AppConfig } from '../types';
 import { STATUS_COLORS, UI_TOKENS } from '../constants';
 import { AnimatePresence, motion, useReducedMotion } from 'https://esm.sh/framer-motion@11.11.17';
 
-interface WindowProps {
-  config: AppConfig;
-  state: WindowState;
-  isActive: boolean;
-  onClose: (id: string) => void;
-  onMinimize: (id: string) => void;
-  onFocus: (id: string) => void;
-  children: ReactNode;
-  onMouseDown: (e: React.MouseEvent, id: string, type: 'move' | 'resize') => void;
-  isCompactLayout: boolean;
-}
-
-export const Window: React.FC<WindowProps> = ({
+export const Window = ({
   config,
   state,
   isActive,
