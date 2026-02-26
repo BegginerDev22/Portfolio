@@ -3,14 +3,14 @@ import { Lock, Unlock, Download, AlertTriangle, Fingerprint, Grid3x3, FileText, 
 import { RESUME_TEXT } from '../../constants';
 import { jsPDF } from 'jspdf';
 
-export const ResumeLock: React.FC = () => {
+export const ResumeLock = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
-  const [authMode, setAuthMode] = useState<'biometric' | 'passcode'>('biometric');
+  const [authMode, setAuthMode] = useState('biometric');
   
   // Biometric State
   const [scanProgress, setScanProgress] = useState(0);
   const [isScanning, setIsScanning] = useState(false);
-  const scanIntervalRef = useRef<number | undefined>(undefined);
+  const scanIntervalRef = useRef(undefined);
   
   // Passcode State
   const [pin, setPin] = useState('');
@@ -19,7 +19,7 @@ export const ResumeLock: React.FC = () => {
   // Decryption Text Effect
   const [decryptText, setDecryptText] = useState('');
   const [typedResume, setTypedResume] = useState('');
-  const contentRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef(null);
   
   const CORRECT_PIN = '1337';
 
@@ -78,7 +78,7 @@ export const ResumeLock: React.FC = () => {
   };
 
   // Passcode Logic
-  const handlePinSubmit = (e: React.FormEvent) => {
+  const handlePinSubmit = (e) => {
     e.preventDefault();
     if (pin === CORRECT_PIN) {
       setIsUnlocked(true);

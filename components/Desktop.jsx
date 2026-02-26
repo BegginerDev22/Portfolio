@@ -33,17 +33,8 @@ export const Desktop: React.FC = () => {
     return initial;
   });
 
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [dragState, setDragState] = useState<{
-    id: string;
-    type: 'move' | 'resize';
-    startX: number;
-    startY: number;
-    initialX: number;
-    initialY: number;
-    initialWidth: number;
-    initialHeight: number;
-  } | null>(null);
+  const [activeId, setActiveId] = useState(null);
+  const [dragState, setDragState] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -80,10 +71,10 @@ export const Desktop: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const bringToFront = (id: string) => {
+  const bringToFront = (id) => {
     setActiveId(id);
     setWindows(prev => {
-      const maxZ = Math.max(...Object.values(prev).map((w: WindowState) => w.zIndex), 0);
+      const maxZ = Math.max(...Object.values(prev).map((w) => w.zIndex), 0);
       return {
         ...prev,
         [id]: { ...prev[id], zIndex: maxZ + 1, isMinimized: false }
@@ -91,7 +82,7 @@ export const Desktop: React.FC = () => {
     });
   };
 
-  const openApp = (id: AppId) => {
+  const openApp = (id) => {
     setWindows(prev => ({
       ...prev,
       [id]: { ...prev[id], isOpen: true, isMinimized: false }
@@ -99,14 +90,14 @@ export const Desktop: React.FC = () => {
     bringToFront(id);
   };
 
-  const closeApp = (id: string) => {
+  const closeApp = (id) => {
     setWindows(prev => ({
       ...prev,
       [id]: { ...prev[id], isOpen: false }
     }));
   };
 
-  const minimizeApp = (id: string) => {
+  const minimizeApp = (id) => {
     setWindows(prev => ({
       ...prev,
       [id]: { ...prev[id], isMinimized: true }
@@ -130,7 +121,7 @@ export const Desktop: React.FC = () => {
     });
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e) => {
     if (!dragState) return;
 
     const dx = e.clientX - dragState.startX;
@@ -158,7 +149,7 @@ export const Desktop: React.FC = () => {
 
   const handleMouseUp = () => setDragState(null);
 
-  const renderAppContent = (id: AppId) => {
+  const renderAppContent = (id) => {
     switch (id) {
       case 'projects': return <ProjectsApp />;
       case 'profile': return <ProfileApp />;

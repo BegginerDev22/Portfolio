@@ -1,10 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion, useReducedMotion } from 'https://esm.sh/framer-motion@11.11.17';
 
-interface BootSequenceProps {
-  onComplete: () => void;
-}
-
 const LOGS = [
   'Initializing BIOS...',
   'Checking memory integrity... OK',

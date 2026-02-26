@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { X, Minus, Square } from 'lucide-react';
 import { WindowState, AppConfig } from '../types';
 import { STATUS_COLORS, UI_TOKENS } from '../constants';
