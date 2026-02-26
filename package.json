@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check:js-only": "rg --files -g '*.ts' -g '*.tsx' . && (echo 'TypeScript files found' && exit 1) || echo 'JSX/JS-only check passed'"
   },
   "dependencies": {
     "@google/genai": "^1.30.0",

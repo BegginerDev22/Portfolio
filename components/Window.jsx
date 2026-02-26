@@ -1,17 +1,6 @@
 import React from 'react';
 import { X, Minus, Square } from 'lucide-react';
-/**
- * @param {{
- *  config: import('../constants').AppConfig,
- *  state: {id:string,isOpen:boolean,isMinimized:boolean,zIndex:number,x:number,y:number,width:number,height:number},
- *  isActive: boolean,
- *  onClose: (id: string) => void,
- *  onMinimize: (id: string) => void,
- *  onFocus: (id: string) => void,
- *  children: React.ReactNode,
- *  onMouseDown: (e: React.MouseEvent, id: string, type: 'move' | 'resize') => void
- * }} props
- */
+
 export const Window = ({
   config,
   state,
