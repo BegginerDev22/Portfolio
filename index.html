@@ -63,6 +63,25 @@
       .sound-bar {
         animation: sound-wave 1s ease-in-out infinite;
       }
+
+      @keyframes boot-flicker {
+        0%, 100% { opacity: 0.08; }
+        35% { opacity: 0.03; }
+        42% { opacity: 0.12; }
+        68% { opacity: 0.04; }
+      }
+      .boot-flicker {
+        background: radial-gradient(circle at 50% 0%, rgba(0, 255, 110, 0.09), transparent 60%);
+        animation: boot-flicker 320ms steps(3, end) infinite;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .animate-glitch,
+        .sound-bar,
+        .boot-flicker,
+        .scanlines::before {
+          animation: none !important;
+        }
+      }
     </style>
   <script type="importmap">
 {
