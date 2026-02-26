@@ -58,6 +58,47 @@ export const APPS: AppConfig[] = [
   },
 ];
 
+export const UI_TOKENS = {
+  desktopTexture: "bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]",
+  spacing: {
+    desktopLayout: 'top-4 left-4 gap-5',
+    iconPadding: 'p-2',
+  },
+  typography: {
+    title: 'text-green-200',
+    body: 'text-green-400',
+    subdued: 'text-green-700',
+  },
+  glass: {
+    depthLow: 'bg-black/45 backdrop-blur-[2px]',
+    depthMid: 'bg-black/70 backdrop-blur-[7px]',
+    depthHigh: 'bg-black/80 backdrop-blur-md',
+  },
+};
+
+export const STATUS_COLORS = {
+  active: {
+    bg: 'bg-emerald-400/15',
+    border: 'border-emerald-300/70',
+    glow: 'bg-emerald-400/70',
+  },
+  warning: {
+    bg: 'bg-amber-400/15',
+    border: 'border-amber-300/60',
+    text: 'text-amber-300',
+  },
+  locked: {
+    bg: 'bg-rose-500/15',
+    border: 'border-rose-400/60',
+    text: 'text-rose-300',
+  },
+  decrypted: {
+    bg: 'bg-cyan-400/15',
+    border: 'border-cyan-300/60',
+    text: 'text-cyan-200',
+  }
+};
+
 export const PROJECTS: Project[] = [
   {
     id: 'p_car',

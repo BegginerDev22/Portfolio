@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { motion, useReducedMotion } from 'https://esm.sh/framer-motion@11.11.17';
 
 interface BootSequenceProps {
   onComplete: () => void;
@@ -16,31 +17,58 @@ const LOGS = [
 ];
 
 export const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
-  const [lines, setLines] = useState<string[]>([]);
-  const [index, setIndex] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
+  const [lineIndex, setLineIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [visibleLines, setVisibleLines] = useState<string[]>([]);
+
+  const timestamp = useMemo(() => new Date().toLocaleTimeString(), []);
 
   useEffect(() => {
-    if (index >= LOGS.length) {
-      const timer = setTimeout(onComplete, 1000);
+    if (lineIndex >= LOGS.length) {
+      const timer = setTimeout(onComplete, 850);
       return () => clearTimeout(timer);
     }
 
-    const timeout = setTimeout(() => {
-      setLines((prev) => [...prev, LOGS[index]]);
-      setIndex((prev) => prev + 1);
-    }, Math.random() * 400 + 100);
+    const current = LOGS[lineIndex];
 
-    return () => clearTimeout(timeout);
-  }, [index, onComplete]);
+    if (charIndex < current.length) {
+      const timer = setTimeout(() => setCharIndex(prev => prev + 1), prefersReducedMotion ? 6 : 18);
+      return () => clearTimeout(timer);
+    }
+
+    const linePause = setTimeout(() => {
+      setVisibleLines(prev => [...prev, current]);
+      setLineIndex(prev => prev + 1);
+      setCharIndex(0);
+    }, prefersReducedMotion ? 30 : 120);
+
+    return () => clearTimeout(linePause);
+  }, [charIndex, lineIndex, onComplete, prefersReducedMotion]);
+
+  const activeLine = lineIndex < LOGS.length ? LOGS[lineIndex].slice(0, charIndex) : '';
 
   return (
-    <div className="h-screen w-screen bg-black text-green-500 p-8 font-mono text-lg flex flex-col justify-end pb-20 scanlines">
-      {lines.map((line, i) => (
-        <div key={i} className="mb-2">
-          <span className="text-green-800 mr-2">[{new Date().toLocaleTimeString()}]</span>
+    <div className="h-screen w-screen bg-black text-green-500 p-8 font-mono text-lg flex flex-col justify-end pb-20 scanlines relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none boot-flicker" />
+      {visibleLines.map((line, i) => (
+        <motion.div
+          key={`${line}-${i}`}
+          className="mb-2"
+          initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: prefersReducedMotion ? 0.08 : 0.2 }}
+        >
+          <span className="text-green-800 mr-2">[{timestamp}]</span>
           {line}
-        </div>
+        </motion.div>
       ))}
+      {lineIndex < LOGS.length && (
+        <div className="mb-2">
+          <span className="text-green-800 mr-2">[{timestamp}]</span>
+          {activeLine}
+        </div>
+      )}
       <div className="animate-pulse">_</div>
     </div>
   );
