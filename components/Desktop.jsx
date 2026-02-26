@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { APPS, UI_TOKENS, STATUS_COLORS } from '../constants';
-import { WindowState, AppId } from '../types';
 import { Window } from './Window';
 import { ProjectsApp } from './apps/ProjectsApp';
 import { ProfileApp } from './apps/ProfileApp';
@@ -11,11 +10,14 @@ import { ContactApp } from './apps/ContactApp';
 import { SystemMonitor } from './SystemMonitor';
 import { AnimatePresence, motion, useReducedMotion } from 'https://esm.sh/framer-motion@11.11.17';
 
-export const Desktop: React.FC = () => {
+export const Desktop = () => {
   const prefersReducedMotion = useReducedMotion();
-  const [windows, setWindows] = useState<Record<string, WindowState>>(() => {
+  const [isCompactLayout, setIsCompactLayout] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 1024 : false
+  );
+  const [windows, setWindows] = useState(() => {
     const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
-    const initial: Record<string, WindowState> = {};
+    const initial = {};
 
     APPS.forEach(app => {
       initial[app.id] = {
@@ -38,12 +40,38 @@ export const Desktop: React.FC = () => {
 
   useEffect(() => {
     const handleResize = () => {
+      const compact = window.innerWidth < 1024;
+      setIsCompactLayout(compact);
+
       setWindows((prev) => {
         const next = { ...prev };
         let hasChanges = false;
 
         Object.keys(next).forEach((key) => {
           const win = next[key];
+          const mobileWidth = window.innerWidth - 16;
+          const mobileHeight = window.innerHeight - 112;
+
+          if (compact) {
+            const mobileX = 8;
+            const mobileY = 52;
+            if (
+              win.width !== mobileWidth ||
+              win.height !== mobileHeight ||
+              win.x !== mobileX ||
+              win.y !== mobileY
+            ) {
+              next[key] = {
+                ...win,
+                width: mobileWidth,
+                height: mobileHeight,
+                x: mobileX,
+                y: mobileY,
+              };
+              hasChanges = true;
+            }
+            return;
+          }
 
           if (win.width > window.innerWidth) {
             next[key] = {
@@ -105,7 +133,7 @@ export const Desktop: React.FC = () => {
     setActiveId(null);
   };
 
-  const handleMouseDown = (e: React.MouseEvent, id: string, type: 'move' | 'resize') => {
+  const handleMouseDown = (e, id, type) => {
     e.preventDefault();
     bringToFront(id);
     const win = windows[id];
@@ -122,7 +150,7 @@ export const Desktop: React.FC = () => {
   };
 
   const handleMouseMove = (e) => {
-    if (!dragState) return;
+    if (!dragState || isCompactLayout) return;
 
     const dx = e.clientX - dragState.startX;
     const dy = e.clientY - dragState.startY;
@@ -130,9 +158,18 @@ export const Desktop: React.FC = () => {
     setWindows(prev => {
       const win = prev[dragState.id];
       if (dragState.type === 'move') {
+        const nextX = Math.min(
+          Math.max(0, dragState.initialX + dx),
+          Math.max(0, window.innerWidth - win.width)
+        );
+        const nextY = Math.min(
+          Math.max(0, dragState.initialY + dy),
+          Math.max(0, window.innerHeight - win.height - 48)
+        );
+
         return {
           ...prev,
-          [dragState.id]: { ...win, x: dragState.initialX + dx, y: dragState.initialY + dy }
+          [dragState.id]: { ...win, x: nextX, y: nextY }
         };
       }
 
@@ -140,8 +177,8 @@ export const Desktop: React.FC = () => {
         ...prev,
         [dragState.id]: {
           ...win,
-          width: Math.max(300, dragState.initialWidth + dx),
-          height: Math.max(200, dragState.initialHeight + dy)
+          width: Math.max(300, Math.min(window.innerWidth - 12, dragState.initialWidth + dx)),
+          height: Math.max(200, Math.min(window.innerHeight - 56, dragState.initialHeight + dy))
         }
       };
     });
@@ -163,7 +200,7 @@ export const Desktop: React.FC = () => {
 
   const iconVariants = {
     hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 18, scale: prefersReducedMotion ? 1 : 0.98 },
-    visible: (index: number) => ({
+    visible: (index) => ({
       opacity: 1,
       y: 0,
       scale: 1,
@@ -182,6 +219,7 @@ export const Desktop: React.FC = () => {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/10 via-transparent to-cyan-500/10 pointer-events-none" />
       <div className="absolute inset-0 grid grid-cols-[repeat(40,1fr)] grid-rows-[repeat(25,1fr)] pointer-events-none opacity-10">
         {Array(1000).fill(0).map((_, i) => (
           <div key={i} className="border-[0.5px] border-green-900/30" />
@@ -190,7 +228,7 @@ export const Desktop: React.FC = () => {
 
       <SystemMonitor />
 
-      <motion.div className="absolute top-4 left-4 flex flex-col gap-5 z-10" initial="hidden" animate="visible">
+      <motion.div className={`absolute z-10 ${isCompactLayout ? 'top-2 left-2 right-2 flex flex-row gap-2 overflow-x-auto no-scrollbar pb-1' : 'top-4 left-4 flex flex-col gap-5'}`} initial="hidden" animate="visible">
         {APPS.map((app, index) => (
           <motion.button
             key={app.id}
@@ -199,7 +237,7 @@ export const Desktop: React.FC = () => {
             whileHover={prefersReducedMotion ? {} : { y: -6, scale: 1.04 }}
             whileTap={prefersReducedMotion ? {} : { scale: 0.97 }}
             onClick={() => openApp(app.id)}
-            className={`group flex flex-col items-center gap-2 w-24 ${UI_TOKENS.spacing.iconPadding} rounded ${UI_TOKENS.glass.depthLow} border border-green-900/30 hover:border-green-500/40`}
+            className={`group flex ${isCompactLayout ? 'flex-row items-center min-w-[156px] justify-start gap-3' : 'flex-col items-center gap-2 w-24'} ${UI_TOKENS.spacing.iconPadding} rounded-xl ${UI_TOKENS.glass.depthLow} border border-green-900/30 hover:border-green-500/40`}
           >
             <div className="relative text-green-500 group-hover:text-green-200 transition-colors">
               <app.icon size={48} strokeWidth={1.5} />
@@ -208,7 +246,7 @@ export const Desktop: React.FC = () => {
                 transition={{ duration: 0.2 }}
               />
             </div>
-            <span className="text-xs font-mono text-green-300 bg-black/60 px-2 py-0.5 rounded shadow-lg tracking-wide group-hover:text-white">
+            <span className="text-xs font-mono text-green-300 bg-black/60 px-2 py-0.5 rounded shadow-lg tracking-wide group-hover:text-white whitespace-nowrap">
               {app.title}
             </span>
           </motion.button>
@@ -225,18 +263,19 @@ export const Desktop: React.FC = () => {
           onMinimize={minimizeApp}
           onFocus={bringToFront}
           onMouseDown={handleMouseDown}
+          isCompactLayout={isCompactLayout}
         >
           {renderAppContent(app.id)}
         </Window>
       ))}
 
       <motion.div
-        className={`absolute bottom-0 left-0 right-0 h-12 ${UI_TOKENS.glass.depthMid} border-t border-green-900/70 flex items-center px-4 gap-2 z-[100]`}
+        className={`absolute bottom-0 left-0 right-0 ${isCompactLayout ? 'h-14 px-2' : 'h-12 px-4'} ${UI_TOKENS.glass.depthMid} border-t border-green-900/70 flex items-center gap-2 z-[100]`}
         initial={{ y: prefersReducedMotion ? 0 : 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: prefersReducedMotion ? 0.15 : 0.45, ease: 'easeOut' }}
       >
-        <div className="mr-4 bg-green-900/30 px-2 py-1 rounded border border-green-700">
+        <div className={`${isCompactLayout ? 'mr-1 px-1.5' : 'mr-4 px-2'} bg-green-900/30 py-1 rounded border border-green-700`}>
           <span className="font-bold text-green-400 text-sm tracking-[0.2em]">SpyOS</span>
         </div>
         <div className="flex-1 flex gap-2 overflow-x-auto no-scrollbar">
@@ -263,13 +302,13 @@ export const Desktop: React.FC = () => {
                   whileTap={prefersReducedMotion ? {} : { scale: 0.97 }}
                 >
                   <app.icon size={14} />
-                  <span className="hidden md:inline tracking-wide">{app.title}</span>
+                  <span className="hidden sm:inline tracking-wide">{app.title}</span>
                 </motion.button>
               );
             })}
           </AnimatePresence>
         </div>
-        <div className="ml-auto text-xs text-green-700 font-mono hidden md:block tracking-wider">
+        <div className="ml-auto text-xs text-green-700 font-mono hidden lg:block tracking-wider">
           SECURE CONNECTION // {new Date().toLocaleDateString()}
         </div>
       </motion.div>

@@ -1,21 +1,9 @@
 import React from 'react';
 import { X, Minus, Square } from 'lucide-react';
-import { WindowState, AppConfig } from '../types';
 import { STATUS_COLORS, UI_TOKENS } from '../constants';
 import { AnimatePresence, motion, useReducedMotion } from 'https://esm.sh/framer-motion@11.11.17';
 
-interface WindowProps {
-  config: AppConfig;
-  state: WindowState;
-  isActive: boolean;
-  onClose: (id: string) => void;
-  onMinimize: (id: string) => void;
-  onFocus: (id: string) => void;
-  children: ReactNode;
-  onMouseDown: (e: React.MouseEvent, id: string, type: 'move' | 'resize') => void;
-}
-
-export const Window: React.FC<WindowProps> = ({
+export const Window = ({
   config,
   state,
   isActive,
@@ -24,6 +12,7 @@ export const Window: React.FC<WindowProps> = ({
   onFocus,
   children,
   onMouseDown,
+  isCompactLayout,
 }) => {
   const prefersReducedMotion = useReducedMotion();
 
@@ -35,7 +24,7 @@ export const Window: React.FC<WindowProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: prefersReducedMotion ? 1 : 0.96, y: prefersReducedMotion ? 0 : 18 }}
           transition={{ duration: prefersReducedMotion ? 0.12 : 0.24, ease: 'easeOut' }}
-          className={`absolute flex flex-col ${UI_TOKENS.glass.depthHigh} border overflow-hidden max-w-[100vw] max-h-[100vh] transition-all duration-300 ${
+          className={`absolute flex flex-col ${UI_TOKENS.glass.depthHigh} border overflow-hidden max-w-[100vw] max-h-[100vh] transition-all duration-300 rounded-xl md:rounded-lg ${
             isActive
               ? `${STATUS_COLORS.active.border} shadow-[0_0_35px_rgba(16,185,129,0.28)]`
               : 'border-green-900/50 opacity-90 blur-[0.2px]'
@@ -55,8 +44,11 @@ export const Window: React.FC<WindowProps> = ({
               boxShadow: isActive ? 'inset 0 -1px 0 rgba(16,185,129,0.45)' : 'inset 0 -1px 0 rgba(21, 128, 61, 0.2)'
             }}
             transition={{ duration: prefersReducedMotion ? 0.1 : 0.25 }}
-            className="h-9 flex items-center justify-between px-3 border-b border-green-500/30 select-none cursor-grab active:cursor-grabbing"
-            onMouseDown={(e) => onMouseDown(e, config.id, 'move')}
+            className={`h-9 flex items-center justify-between px-3 border-b border-green-500/30 select-none ${isCompactLayout ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'}`}
+            onMouseDown={(e) => {
+              if (isCompactLayout) return;
+              onMouseDown(e, config.id, 'move');
+            }}
           >
             <div className="flex items-center gap-2">
               <config.icon size={14} className="text-green-400" />
@@ -103,12 +95,14 @@ export const Window: React.FC<WindowProps> = ({
             <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-green-500 pointer-events-none" />
           </motion.div>
 
-          <div
-            className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize z-50 hover:bg-green-500/50"
-            onMouseDown={(e) => onMouseDown(e, config.id, 'resize')}
-          >
-            <div className="absolute bottom-1 right-1 w-2 h-2 border-b-2 border-r-2 border-green-500" />
-          </div>
+          {!isCompactLayout && (
+            <div
+              className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize z-50 hover:bg-green-500/50"
+              onMouseDown={(e) => onMouseDown(e, config.id, 'resize')}
+            >
+              <div className="absolute bottom-1 right-1 w-2 h-2 border-b-2 border-r-2 border-green-500" />
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

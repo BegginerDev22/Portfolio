@@ -3,9 +3,9 @@ import { Activity, Cpu, Database, Wifi } from 'lucide-react';
 import { motion, useReducedMotion } from 'https://esm.sh/framer-motion@11.11.17';
 import { STATUS_COLORS, UI_TOKENS } from '../constants';
 
-export const SystemMonitor: React.FC = () => {
+export const SystemMonitor = () => {
   const prefersReducedMotion = useReducedMotion();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef(null);
   const [cpuLoad, setCpuLoad] = useState(30);
   const [ramLoad, setRamLoad] = useState(45);
 
@@ -16,7 +16,7 @@ export const SystemMonitor: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let dataPoints: number[] = Array(64).fill(45);
+    let dataPoints = Array(64).fill(45);
     let animationId = 0;
     let frame = 0;
 
