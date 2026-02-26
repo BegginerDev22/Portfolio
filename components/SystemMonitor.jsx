@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Activity, Cpu, Database, Wifi } from 'lucide-react';
 
-export const SystemMonitor: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+export const SystemMonitor = () => {
+  const canvasRef = useRef(null);
   const [cpuLoad, setCpuLoad] = useState(30);
   const [ramLoad, setRamLoad] = useState(45);
 
@@ -13,8 +13,8 @@ export const SystemMonitor: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let dataPoints: number[] = Array(50).fill(50);
-    let animationId: number;
+    let dataPoints = Array(50).fill(50);
+    let animationId;
     let frame = 0;
 
     const draw = () => {

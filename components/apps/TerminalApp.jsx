@@ -1,35 +1,30 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GoogleGenAI, Chat, GenerateContentResponse } from '@google/genai';
+import { GoogleGenAI } from '@google/genai';
 import { Send } from 'lucide-react';
 
 // NOTE: In a production environment, calls should go to a backend. 
 // For this specific demo request, we access process.env.API_KEY directly 
 // as instructed by the prompt rules for the demo.
 
-interface Message {
-  id: string;
-  role: 'user' | 'system' | 'model';
-  text: string;
-}
 
-export const TerminalApp: React.FC = () => {
+export const TerminalApp = () => {
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState([
     { id: 'init', role: 'system', text: 'SECURE UPLINK ESTABLISHED. CONNECTED TO HQ AI.' },
     { id: 'intro', role: 'model', text: 'Agent, this is HQ. I am ready to assist with intelligence gathering or code analysis. What is your status?' }
   ]);
   const [isLoading, setIsLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    const userMsg: Message = { id: Date.now().toString(), role: 'user', text: input };
+    const userMsg = { id: Date.now().toString(), role: 'user', text: input };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsLoading(true);
@@ -46,11 +41,11 @@ export const TerminalApp: React.FC = () => {
       const history = messages
             .filter(m => m.role !== 'system')
             .map(m => ({
-                role: m.role as 'user' | 'model',
+                role: m.role,
                 parts: [{ text: m.text }]
             }));
 
-      const chat: Chat = ai.chats.create({
+      const chat = ai.chats.create({
         model: 'gemini-2.5-flash',
         config: {
             systemInstruction: "You are a handler at an intelligence agency HQ. The user is a field agent (Spy). Answer questions about technology, coding, and mission strategy in a cryptic, professional, military-style tone. Keep responses concise. Use terms like 'Intel', 'Operative', 'Asset', 'Cipher'. Do not break character."
@@ -67,8 +62,7 @@ export const TerminalApp: React.FC = () => {
       setMessages(prev => [...prev, { id: msgId, role: 'model', text: '' }]);
 
       for await (const chunk of result) {
-        const c = chunk as GenerateContentResponse;
-        const chunkText = c.text;
+        const chunkText = chunk.text;
         if (chunkText) {
             fullResponse += chunkText;
             
@@ -78,11 +72,11 @@ export const TerminalApp: React.FC = () => {
         }
       }
 
-    } catch (error: any) {
+    } catch (error) {
       setMessages(prev => [...prev, { 
         id: Date.now().toString(), 
         role: 'system', 
-        text: `ERROR: UPLINK FAILED. ${error.message || 'Unknown error'}` 
+        text: `ERROR: UPLINK FAILED. ${error?.message || 'Unknown error'}` 
       }]);
     } finally {
       setIsLoading(false);

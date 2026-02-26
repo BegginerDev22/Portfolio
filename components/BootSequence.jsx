@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-interface BootSequenceProps {
-  onComplete: () => void;
-}
-
 const LOGS = [
   'Initializing BIOS...',
   'Checking memory integrity... OK',
@@ -15,8 +11,8 @@ const LOGS = [
   'Access Granted.',
 ];
 
-export const BootSequence: React.FC<BootSequenceProps> = ({ onComplete }) => {
-  const [lines, setLines] = useState<string[]>([]);
+export const BootSequence = ({ onComplete }) => {
+  const [lines, setLines] = useState([]);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { PROJECTS } from '../../constants';
 import { Lock, Unlock, ShieldAlert, ExternalLink } from 'lucide-react';
 
-export const ProjectsApp: React.FC = () => {
+export const ProjectsApp = () => {
   const [projects, setProjects] = useState(PROJECTS);
-  const [decrypting, setDecrypting] = useState<string | null>(null);
+  const [decrypting, setDecrypting] = useState(null);
 
-  const handleDecrypt = (id: string) => {
+  const handleDecrypt = (id) => {
     setDecrypting(id);
     
     // Simulation of decryption process

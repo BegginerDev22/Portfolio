@@ -1,7 +1,7 @@
 import React from 'react';
 import { User, MapPin, Hash, Globe, Award, GraduationCap } from 'lucide-react';
 
-export const ProfileApp: React.FC = () => {
+export const ProfileApp = () => {
   return (
     <div className="flex flex-col h-full text-green-400">
       <div className="flex flex-col md:flex-row gap-6 mb-6">

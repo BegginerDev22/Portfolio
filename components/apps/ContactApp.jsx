@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Send, Radio, AlertCircle, CheckCircle, Mic } from 'lucide-react';
 
-export const ContactApp: React.FC = () => {
-  const [formState, setFormState] = useState<'idle' | 'transmitting' | 'sent'>('idle');
+export const ContactApp = () => {
+  const [formState, setFormState] = useState('idle');
   const [formData, setFormData] = useState({
     agentId: '',
     frequency: '',
     payload: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (formState !== 'idle') return;
 
