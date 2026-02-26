@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SKILLS } from '../../constants';
 
-export const SkillsApp: React.FC = () => {
+export const SkillsApp = () => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
