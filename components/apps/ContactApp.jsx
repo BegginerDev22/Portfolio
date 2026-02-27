@@ -59,7 +59,7 @@ export const ContactApp = () => {
       </div>
 
       {/* Social links */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         {[
           { label: 'GitHub', icon: Github, href: 'https://github.com/' },
           { label: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/' },

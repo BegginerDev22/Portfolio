@@ -138,9 +138,9 @@ export const SkillsApp = () => {
       </div>
 
       {/* Content for active category */}
-      <div className="grid grid-cols-1 gap-4" style={{ gridTemplateColumns: '1fr auto' }}>
+      <div className="flex gap-4 items-start">
         {/* Bar chart */}
-        <div className="space-y-3">
+        <div className="space-y-3 flex-1 min-w-0">
           {category.skills.map((skill, j) => {
             const delay = j * 120;
             return (

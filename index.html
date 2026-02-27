@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="description"
     content="Sarthak Mayani — Software Engineer & Full Stack Developer. Interactive portfolio built with React and Three.js." />
   <title>SpyOS // Sarthak Mayani — Classified Access</title>
@@ -30,6 +30,7 @@
 
     * {
       box-sizing: border-box;
+      touch-action: manipulation;
     }
 
     html,
@@ -41,6 +42,8 @@
       overflow: hidden;
       background: var(--bg-deep);
       color: var(--green-primary);
+      /* Support notched / home-indicator devices */
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     body {

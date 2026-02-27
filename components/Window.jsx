@@ -133,7 +133,7 @@ export const Window = ({
           <div
             className="flex-1 overflow-auto relative"
             style={{
-              padding: '16px',
+              padding: isCompactLayout ? '10px' : '16px',
               opacity: isActive ? 1 : 0.82,
               transition: 'opacity 0.2s',
               scrollbarWidth: 'thin',

@@ -79,7 +79,7 @@ export const BootSequence = ({ onComplete }) => {
       <div className="absolute inset-0 z-10 boot-flicker pointer-events-none" />
 
       {/* ── HUD Header ── */}
-      <div className="relative z-20 flex items-center justify-between px-8 pt-6">
+      <div className="relative z-20 flex items-center justify-between px-4 sm:px-8 pt-6">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -115,7 +115,7 @@ export const BootSequence = ({ onComplete }) => {
       </div>
 
       {/* ── Main log area ── */}
-      <div className="relative z-20 flex-1 flex flex-col justify-end px-8 pb-6">
+      <div className="relative z-20 flex-1 flex flex-col justify-end px-4 sm:px-8 pb-6">
         {/* Log lines */}
         <div className="space-y-1 mb-4 max-h-[60vh] overflow-hidden">
           <AnimatePresence>
@@ -125,9 +125,9 @@ export const BootSequence = ({ onComplete }) => {
                 initial={{ opacity: 0, x: prefersReducedMotion ? 0 : -12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.2, ease: 'easeOut' }}
-                className="font-mono text-sm flex items-start gap-3"
+                className="font-mono text-xs sm:text-sm flex items-start gap-2 sm:gap-3"
               >
-                <span className="opacity-40 shrink-0 text-[11px] mt-0.5">[{timestamp}]</span>
+                <span className="opacity-40 shrink-0 text-[10px] mt-0.5 hidden sm:inline">[{timestamp}]</span>
                 <span style={{ color: typeColor[line.type] }}>{line.text}</span>
               </motion.div>
             ))}
@@ -135,8 +135,8 @@ export const BootSequence = ({ onComplete }) => {
 
           {/* Active typing line */}
           {lineIndex < LOGS.length && (
-            <div className="font-mono text-sm flex items-start gap-3">
-              <span className="opacity-40 shrink-0 text-[11px] mt-0.5">[{timestamp}]</span>
+            <div className="font-mono text-xs sm:text-sm flex items-start gap-2 sm:gap-3">
+              <span className="opacity-40 shrink-0 text-[10px] mt-0.5 hidden sm:inline">[{timestamp}]</span>
               <span style={{ color: typeColor[activeType] }}>
                 {activeLine}
                 <span className="cursor-blink">█</span>
@@ -169,8 +169,9 @@ export const BootSequence = ({ onComplete }) => {
           </div>
 
           {/* Bottom status row */}
-          <div className="flex items-center justify-between text-[10px] font-mono opacity-40 pt-2">
-            <span>UEFI SECURE BOOT // TLS 1.3 // AES-256-GCM</span>
+          <div className="flex items-center justify-between text-[10px] font-mono opacity-40 pt-2 flex-wrap gap-1">
+            <span className="hidden sm:inline">UEFI SECURE BOOT // TLS 1.3 // AES-256-GCM</span>
+            <span className="sm:hidden">UEFI // AES-256</span>
             <span>CPU: SRV-X7 // MEM: 32GB ECC</span>
           </div>
         </motion.div>

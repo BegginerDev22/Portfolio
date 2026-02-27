@@ -28,8 +28,11 @@ export const Desktop = () => {
   const [isCompactLayout, setIsCompactLayout] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth < 1024 : false
   );
+  // On mobile: icons are a slim left column, width ~64px
+  const TASKBAR_H = 48;
+  const ICON_COL_W = 64; // compact left icon column width
   const [windows, setWindows] = useState(() => {
-    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
+    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 1024 : false;
     const initial = {};
     APPS.forEach(app => {
       initial[app.id] = {
@@ -37,10 +40,10 @@ export const Desktop = () => {
         isOpen: false,
         isMinimized: false,
         zIndex: 1,
-        x: isMobile ? 10 : app.defaultX,
-        y: isMobile ? 60 : app.defaultY,
-        width: isMobile ? window.innerWidth - 20 : app.defaultWidth,
-        height: isMobile ? Math.min(600, window.innerHeight - 120) : app.defaultHeight,
+        x: isMobile ? ICON_COL_W + 6 : app.defaultX,
+        y: isMobile ? 6 : app.defaultY,
+        width: isMobile ? window.innerWidth - ICON_COL_W - 12 : app.defaultWidth,
+        height: isMobile ? Math.min(window.innerHeight - TASKBAR_H - 16, 600) : app.defaultHeight,
       };
     });
     return initial;
@@ -59,11 +62,13 @@ export const Desktop = () => {
         let hasChanges = false;
         Object.keys(next).forEach((key) => {
           const win = next[key];
-          const mw = window.innerWidth - 16;
-          const mh = window.innerHeight - 112;
           if (compact) {
-            if (win.width !== mw || win.height !== mh || win.x !== 8 || win.y !== 52) {
-              next[key] = { ...win, width: mw, height: mh, x: 8, y: 52 };
+            const mw = window.innerWidth - ICON_COL_W - 12;
+            const mh = window.innerHeight - TASKBAR_H - 16;
+            const mx = ICON_COL_W + 6;
+            const my = 6;
+            if (win.width !== mw || win.height !== mh || win.x !== mx || win.y !== my) {
+              next[key] = { ...win, width: mw, height: mh, x: mx, y: my };
               hasChanges = true;
             }
             return;
@@ -82,7 +87,7 @@ export const Desktop = () => {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [TASKBAR_H, ICON_COL_W]);
 
   const bringToFront = (id) => {
     setActiveId(id);
@@ -197,12 +202,14 @@ export const Desktop = () => {
         <SystemMonitor />
       </div>
 
-      {/* ── Desktop Icons (sidebar) ── */}
+      {/* ── Desktop Icons ── */}
+      {/* Always a left-side vertical column — compact on mobile, wider on desktop */}
       <motion.div
-        className={`absolute z-10 ${isCompactLayout
-            ? 'top-2 left-2 right-2 flex flex-row gap-2 overflow-x-auto no-scrollbar pb-1'
-            : 'top-4 left-3 flex flex-col gap-2.5'
+        className={`absolute z-10 left-2 flex flex-col gap-2 overflow-y-auto no-scrollbar py-1 ${isCompactLayout
+            ? 'top-2 bottom-14' /* above taskbar on mobile */
+            : 'top-4'           /* free-grows on desktop */
           }`}
+        style={isCompactLayout ? { width: `${ICON_COL_W - 8}px` } : {}}
         initial="hidden"
         animate="visible"
       >
@@ -211,15 +218,15 @@ export const Desktop = () => {
             key={app.id}
             custom={index}
             variants={iconVariants}
-            whileHover={prefersReducedMotion ? {} : { scale: 1.06, y: -4 }}
+            whileHover={prefersReducedMotion ? {} : { scale: 1.06, y: -2 }}
             whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
             onClick={() => openApp(app.id)}
             onHoverStart={() => setHoveredApp(app.id)}
             onHoverEnd={() => setHoveredApp(null)}
-            className={`group relative flex ${isCompactLayout
-                ? 'flex-row items-center min-w-[148px] justify-start gap-3 px-3 py-2'
-                : 'flex-col items-center gap-1.5 w-[76px] py-3 px-2'
-              } rounded-xl border transition-all duration-200`}
+            className={`group relative flex flex-col items-center gap-1 rounded-xl border transition-all duration-200 ${isCompactLayout
+              ? 'w-full py-2 px-1'
+              : 'w-[76px] py-3 px-2 gap-1.5'
+              }`}
             style={{
               background: hoveredApp === app.id
                 ? 'rgba(0,255,157,0.08)'
@@ -236,7 +243,7 @@ export const Desktop = () => {
             {/* Icon */}
             <div className="relative">
               <app.icon
-                size={isCompactLayout ? 22 : 32}
+                size={isCompactLayout ? 20 : 32}
                 strokeWidth={1.4}
                 style={{ color: hoveredApp === app.id ? '#00ff9d' : '#00b36b' }}
                 className="transition-colors duration-200"
@@ -254,12 +261,13 @@ export const Desktop = () => {
 
             {/* Label */}
             <span
-              className="font-mono transition-colors duration-200 leading-tight text-center"
+              className="font-mono transition-colors duration-200 leading-tight text-center w-full"
               style={{
-                fontSize: isCompactLayout ? '10px' : '9px',
+                fontSize: isCompactLayout ? '7px' : '9px',
                 color: hoveredApp === app.id ? '#ffffff' : 'rgba(0,255,157,0.7)',
-                whiteSpace: isCompactLayout ? 'nowrap' : 'normal',
-                wordBreak: 'break-word',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
               }}
             >
               {app.title}
@@ -268,12 +276,12 @@ export const Desktop = () => {
             {/* Open indicator */}
             {windows[app.id]?.isOpen && (
               <div
-                className="absolute bottom-1 w-1 h-1 rounded-full"
+                className="absolute bottom-0.5 w-1 h-1 rounded-full"
                 style={{
                   background: '#00ff9d',
                   boxShadow: '0 0 4px #00ff9d',
-                  left: isCompactLayout ? '8px' : '50%',
-                  transform: isCompactLayout ? 'none' : 'translateX(-50%)',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
                 }}
               />
             )}
@@ -300,7 +308,7 @@ export const Desktop = () => {
 
       {/* ── Taskbar ── */}
       <motion.div
-        className={`absolute bottom-0 left-0 right-0 z-[100] flex items-center gap-2 ${isCompactLayout ? 'h-14 px-2' : 'h-12 px-4'
+        className={`absolute bottom-0 left-0 right-0 z-[100] flex items-center gap-2 ${isCompactLayout ? 'h-12 px-2' : 'h-12 px-4'
           }`}
         style={{
           background: 'rgba(0,0,0,0.8)',

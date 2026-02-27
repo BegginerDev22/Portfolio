@@ -23,10 +23,10 @@ export const ProfileApp = () => {
         <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full pointer-events-none"
           style={{ background: 'radial-gradient(circle, rgba(0,255,157,0.08) 0%, transparent 70%)' }} />
 
-        <div className="flex gap-5 items-start relative z-10">
+        <div className="flex gap-4 items-start relative z-10 flex-wrap">
           {/* Avatar */}
           <div className="relative shrink-0">
-            <div className="w-20 h-20 rounded-xl overflow-hidden"
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden"
               style={{ border: '2px solid rgba(0,255,157,0.35)', boxShadow: '0 0 20px rgba(0,255,157,0.15)' }}>
               <img
                 src="https://picsum.photos/200/200?grayscale&random=42"
@@ -44,21 +44,21 @@ export const ProfileApp = () => {
           </div>
 
           {/* Info */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0" style={{ minWidth: '140px' }}>
             <div className="text-[10px] mb-1" style={{ color: 'rgba(0,255,157,0.4)' }}>
               AGENT_PROFILE.dat // CLEARANCE: OMEGA
             </div>
-            <h1 className="font-display text-2xl font-bold tracking-tight text-white mb-0.5">
+            <h1 className="font-display text-xl font-bold tracking-tight text-white mb-0.5">
               Sarthak Mayani
             </h1>
-            <p className="text-[11px] mb-3" style={{ color: 'rgba(0,255,157,0.6)' }}>
+            <p className="text-[10px] mb-3" style={{ color: 'rgba(0,255,157,0.6)' }}>
               SOFTWARE ENGINEER // FULL STACK DEVELOPER
             </p>
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,255,157,0.7)' }}>
                 <MapPin size={11} /> <span>Surat, Gujarat, India</span>
               </div>
-              <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,255,157,0.7)' }}>
+              <div className="flex items-center gap-2 text-xs" style={{ color: 'rgba(0,255,157,0.7)', wordBreak: 'break-all' }}>
                 <Globe size={11} /> <span>sarthakmayani22@gmail.com</span>
               </div>
             </div>
