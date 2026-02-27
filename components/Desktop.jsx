@@ -30,7 +30,7 @@ export const Desktop = () => {
   );
   // On mobile: icons are a slim left column, width ~64px
   const TASKBAR_H = 48;
-  const ICON_COL_W = 64; // compact left icon column width
+  const ICON_COL_W = 74; // compact left icon column width
   const [windows, setWindows] = useState(() => {
     const isMobile = typeof window !== 'undefined' ? window.innerWidth < 1024 : false;
     const initial = {};
@@ -206,8 +206,8 @@ export const Desktop = () => {
       {/* Always a left-side vertical column — compact on mobile, wider on desktop */}
       <motion.div
         className={`absolute z-10 left-2 flex flex-col gap-2 overflow-y-auto no-scrollbar py-1 ${isCompactLayout
-            ? 'top-2 bottom-14' /* above taskbar on mobile */
-            : 'top-4'           /* free-grows on desktop */
+          ? 'top-2 bottom-14' /* above taskbar on mobile */
+          : 'top-4'           /* free-grows on desktop */
           }`}
         style={isCompactLayout ? { width: `${ICON_COL_W - 8}px` } : {}}
         initial="hidden"
@@ -243,7 +243,7 @@ export const Desktop = () => {
             {/* Icon */}
             <div className="relative">
               <app.icon
-                size={isCompactLayout ? 20 : 32}
+                size={isCompactLayout ? 45 : 32}
                 strokeWidth={1.4}
                 style={{ color: hoveredApp === app.id ? '#00ff9d' : '#00b36b' }}
                 className="transition-colors duration-200"
@@ -263,7 +263,7 @@ export const Desktop = () => {
             <span
               className="font-mono transition-colors duration-200 leading-tight text-center w-full"
               style={{
-                fontSize: isCompactLayout ? '7px' : '9px',
+                fontSize: isCompactLayout ? '12px' : '9px',
                 color: hoveredApp === app.id ? '#ffffff' : 'rgba(0,255,157,0.7)',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
