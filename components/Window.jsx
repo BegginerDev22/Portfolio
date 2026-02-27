@@ -1,7 +1,6 @@
 import React from 'react';
-import { X, Minus, Square } from 'lucide-react';
-import { STATUS_COLORS, UI_TOKENS } from '../constants';
-import { AnimatePresence, motion, useReducedMotion } from 'https://esm.sh/framer-motion@11.11.17';
+import { X, Minus, Maximize2 } from 'lucide-react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 export const Window = ({
   config,
@@ -20,87 +19,152 @@ export const Window = ({
     <AnimatePresence>
       {state.isOpen && !state.isMinimized && (
         <motion.div
-          initial={{ opacity: 0, scale: prefersReducedMotion ? 1 : 0.97, y: prefersReducedMotion ? 0 : 18 }}
+          initial={{
+            opacity: 0,
+            scale: prefersReducedMotion ? 1 : 0.92,
+            y: prefersReducedMotion ? 0 : 30,
+          }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: prefersReducedMotion ? 1 : 0.96, y: prefersReducedMotion ? 0 : 18 }}
-          transition={{ duration: prefersReducedMotion ? 0.12 : 0.24, ease: 'easeOut' }}
-          className={`absolute flex flex-col ${UI_TOKENS.glass.depthHigh} border overflow-hidden max-w-[100vw] max-h-[100vh] transition-all duration-300 rounded-xl md:rounded-lg ${
-            isActive
-              ? `${STATUS_COLORS.active.border} shadow-[0_0_35px_rgba(16,185,129,0.28)]`
-              : 'border-green-900/50 opacity-90 blur-[0.2px]'
-          }`}
+          exit={{
+            opacity: 0,
+            scale: prefersReducedMotion ? 1 : 0.94,
+            y: prefersReducedMotion ? 0 : 20,
+          }}
+          transition={{ duration: prefersReducedMotion ? 0.12 : 0.28, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute flex flex-col overflow-hidden max-w-[100vw] max-h-[100vh]"
           style={{
             left: state.x,
             top: state.y,
             width: state.width,
             height: state.height,
             zIndex: state.zIndex,
+            borderRadius: isCompactLayout ? '12px' : '10px',
+            background: 'rgba(2, 8, 4, 0.88)',
+            backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            border: isActive
+              ? '1px solid rgba(0,255,157,0.55)'
+              : '1px solid rgba(0,255,157,0.15)',
+            boxShadow: isActive
+              ? '0 0 0 1px rgba(0,255,157,0.15), 0 8px 48px rgba(0,0,0,0.8), 0 0 40px rgba(0,255,157,0.12), inset 0 0 60px rgba(0,255,157,0.03)'
+              : '0 4px 32px rgba(0,0,0,0.7), inset 0 0 20px rgba(0,255,157,0.01)',
+            transition: 'border-color 0.25s, box-shadow 0.25s',
           }}
           onMouseDown={() => onFocus(config.id)}
         >
+          {/* ── Title bar ── */}
           <motion.div
-            animate={{
-              backgroundColor: isActive ? 'rgba(17, 65, 41, 0.5)' : 'rgba(0, 0, 0, 0.8)',
-              boxShadow: isActive ? 'inset 0 -1px 0 rgba(16,185,129,0.45)' : 'inset 0 -1px 0 rgba(21, 128, 61, 0.2)'
+            className={`h-10 flex items-center justify-between px-3 shrink-0 ${isCompactLayout ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'
+              }`}
+            style={{
+              background: isActive
+                ? 'linear-gradient(90deg, rgba(0,77,48,0.5), rgba(0,0,0,0.4))'
+                : 'rgba(0,0,0,0.6)',
+              borderBottom: '1px solid rgba(0,255,157,0.12)',
+              userSelect: 'none',
             }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.25 }}
-            className={`h-9 flex items-center justify-between px-3 border-b border-green-500/30 select-none ${isCompactLayout ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'}`}
             onMouseDown={(e) => {
               if (isCompactLayout) return;
               onMouseDown(e, config.id, 'move');
             }}
           >
-            <div className="flex items-center gap-2">
-              <config.icon size={14} className="text-green-400" />
-              <span className="text-xs font-bold tracking-[0.18em] text-green-200 uppercase">
+            {/* Left: icon + title */}
+            <div className="flex items-center gap-2 min-w-0">
+              {/* Active dot */}
+              <div
+                className="w-1.5 h-1.5 rounded-full shrink-0"
+                style={{
+                  background: isActive ? '#00ff9d' : 'rgba(0,255,157,0.3)',
+                  boxShadow: isActive ? '0 0 6px #00ff9d' : 'none',
+                }}
+              />
+              <config.icon
+                size={13}
+                strokeWidth={1.6}
+                style={{ color: isActive ? '#00ff9d' : 'rgba(0,255,157,0.5)', flexShrink: 0 }}
+              />
+              <span
+                className="font-mono text-xs font-semibold tracking-[0.15em] uppercase truncate"
+                style={{ color: isActive ? '#e0ffe8' : 'rgba(0,255,157,0.5)' }}
+              >
                 {config.title}
               </span>
             </div>
-            <div className="flex gap-1">
+
+            {/* Right: window controls */}
+            <div className="flex items-center gap-1 shrink-0" onMouseDown={e => e.stopPropagation()}>
+              {/* Minimize */}
               <motion.button
-                whileTap={prefersReducedMotion ? {} : { scale: 0.9, y: 1 }}
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={(e) => { e.stopPropagation(); onMinimize(config.id); }}
-                className="p-1 hover:bg-green-500/20 text-green-400 rounded"
-                aria-label="Minimize window"
+                className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150"
+                style={{ background: 'rgba(255,193,7,0.15)', border: '1px solid rgba(255,193,7,0.4)' }}
+                aria-label="Minimize"
               >
-                <Minus size={12} />
+                <Minus size={9} style={{ color: '#ffc107' }} />
               </motion.button>
+
+              {/* Maximize (disabled) */}
               <motion.button
-                whileTap={prefersReducedMotion ? {} : { scale: 0.9, y: 1 }}
-                className={`p-1 rounded opacity-65 cursor-not-allowed ${STATUS_COLORS.warning.bg} ${STATUS_COLORS.warning.text}`}
-                aria-label="Window maximize unavailable"
+                whileHover={{ scale: 1.15 }}
+                className="w-5 h-5 rounded-full flex items-center justify-center opacity-40 cursor-not-allowed"
+                style={{ background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.3)' }}
+                aria-label="Maximize (unavailable)"
               >
-                <Square size={12} />
+                <Maximize2 size={8} style={{ color: '#00e5ff' }} />
               </motion.button>
+
+              {/* Close */}
               <motion.button
-                whileTap={prefersReducedMotion ? {} : { scale: 0.9, y: 1 }}
+                whileHover={{ scale: 1.15, background: 'rgba(255,69,96,0.35)' }}
+                whileTap={{ scale: 0.9 }}
                 onClick={(e) => { e.stopPropagation(); onClose(config.id); }}
-                className={`p-1 rounded ${STATUS_COLORS.locked.bg} ${STATUS_COLORS.locked.text}`}
-                aria-label="Close window"
+                className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-150"
+                style={{ background: 'rgba(255,69,96,0.15)', border: '1px solid rgba(255,69,96,0.4)' }}
+                aria-label="Close"
               >
-                <X size={12} />
+                <X size={9} style={{ color: '#ff4560' }} />
               </motion.button>
             </div>
           </motion.div>
 
-          <motion.div
-            animate={{ opacity: isActive ? 1 : 0.8, filter: isActive ? 'blur(0px)' : 'blur(0.4px)' }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.22 }}
-            className="flex-1 overflow-auto p-4 relative custom-scrollbar"
+          {/* ── Content area ── */}
+          <div
+            className="flex-1 overflow-auto relative"
+            style={{
+              padding: '16px',
+              opacity: isActive ? 1 : 0.82,
+              transition: 'opacity 0.2s',
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(0,77,48,0.6) transparent',
+            }}
           >
             {children}
-            <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-green-500 pointer-events-none" />
-            <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-green-500 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-green-500 pointer-events-none" />
-            <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-green-500 pointer-events-none" />
-          </motion.div>
 
+            {/* Corner accents */}
+            <div className="absolute top-0 left-0 w-3 h-3 pointer-events-none"
+              style={{ borderTop: '1px solid rgba(0,255,157,0.3)', borderLeft: '1px solid rgba(0,255,157,0.3)' }} />
+            <div className="absolute top-0 right-0 w-3 h-3 pointer-events-none"
+              style={{ borderTop: '1px solid rgba(0,255,157,0.3)', borderRight: '1px solid rgba(0,255,157,0.3)' }} />
+            <div className="absolute bottom-0 left-0 w-3 h-3 pointer-events-none"
+              style={{ borderBottom: '1px solid rgba(0,255,157,0.3)', borderLeft: '1px solid rgba(0,255,157,0.3)' }} />
+            <div className="absolute bottom-0 right-0 w-3 h-3 pointer-events-none"
+              style={{ borderBottom: '1px solid rgba(0,255,157,0.3)', borderRight: '1px solid rgba(0,255,157,0.3)' }} />
+          </div>
+
+          {/* ── Resize handle ── */}
           {!isCompactLayout && (
             <div
-              className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize z-50 hover:bg-green-500/50"
+              className="absolute bottom-0 right-0 w-5 h-5 z-50 group"
+              style={{ cursor: 'se-resize' }}
               onMouseDown={(e) => onMouseDown(e, config.id, 'resize')}
             >
-              <div className="absolute bottom-1 right-1 w-2 h-2 border-b-2 border-r-2 border-green-500" />
+              <svg width="10" height="10" viewBox="0 0 10 10" className="absolute bottom-1 right-1">
+                <line x1="2" y1="10" x2="10" y2="2" stroke="rgba(0,255,157,0.4)" strokeWidth="1" />
+                <line x1="5" y1="10" x2="10" y2="5" stroke="rgba(0,255,157,0.3)" strokeWidth="1" />
+                <line x1="8" y1="10" x2="10" y2="8" stroke="rgba(0,255,157,0.2)" strokeWidth="1" />
+              </svg>
             </div>
           )}
         </motion.div>
